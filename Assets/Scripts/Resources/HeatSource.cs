@@ -14,7 +14,7 @@ public class HeatSource : MonoBehaviour
 
     void Update()
     {
-        for (int i = 0; i < resources.Count; i++)
-            resources[i].RiseTemperature(Time.deltaTime);
+        for (int i = 0; i < source.Count; i++)
+            source[i].RiseTemperature(Time.deltaTime);
     }
 }
