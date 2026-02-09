@@ -1,21 +1,28 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Resources
 {
     #region Basics
-    public enum ResourceType
-    {
-        Sculptable,
-        Meltable,
-        Placeable,
-    }
 
     public interface IResource
     {
         public string Name { get; }
-        public ResourceType Type { get; }
-        public abstract void Interact();
+    }
+
+    public abstract class Resource : IResource
+    {
+        public string Name { get; }
+
+        protected Resource(string name) => Name = name;
+    }
+
+    #region + Hot
+
+    public interface IFuelResource
+    {
+        public float FuelTime { get; }
     }
 
     public interface IHotResource
@@ -26,81 +33,129 @@ namespace Resources
         public float TemperatureDecay { get; }
     }
 
-    public abstract class Resource : IResource
+    public abstract class FuelResource : Resource, IFuelResource
     {
-        public string Name { get; }
-        public ResourceType Type { get; }
+        public float FuelTime { get; }
 
-        protected Resource(string name, ResourceType type)
+        protected FuelResource(string name, float fuelTime)
+            : base(name) => FuelTime = fuelTime;
+
+        public bool Burn(GameObject resourceObject)
         {
-            Name = name;
-            Type = type;
+            ResourceObject resourceObj = resourceObject.GetComponent<ResourceObject>();
+            if (!resourceObj)
+            {
+                Debug.LogError("Object name " + resourceObject.name + " is not a resource object.");
+                return false;
+            }
+            IResource resource = resourceObj.Resource;
+            if (!(resource is FuelResource))
+            {
+                Debug.LogError("Object is not a fuel resource");
+                return false;
+            }
+            resourceObj.AutoDestroy();
+            return true;
         }
-
-        public abstract void Interact();
     }
 
     public abstract class HotResource : Resource, IHotResource
     {
         public float Temperature { get; private set; }
         public float MaxTemperature { get; }
+        public float MeltTemperature { get; }
         public float TemperatureRise { get; }
         public float TemperatureDecay { get; }
 
         protected HotResource(
             string name,
-            ResourceType type = ResourceType.Meltable,
-            float initialTemperature = 0f,
-            float maxTemperature = 500f,
-            float temperatureRise = 8f,
-            float temperatureDecay = 4f
+            float initialTemperature,
+            float maxTemperature,
+            float temperatureRise,
+            float temperatureDecay,
+            float meltTemperature
         )
-            : base(name, type)
+            : base(name)
         {
             Temperature = initialTemperature;
             MaxTemperature = maxTemperature;
+            MeltTemperature = meltTemperature;
             TemperatureRise = temperatureRise;
             TemperatureDecay = temperatureDecay;
         }
 
-        public void RiseTemperature(float time) =>
-            Temperature = Mathf.Clamp(Temperature + (TemperatureRise * time), 0, MaxTemperature);
+        public void RiseTemperature(float time, float temperatureMultiplier = 1f) =>
+            Temperature = Mathf.Clamp(
+                Temperature + (TemperatureRise * time * (1 + temperatureMultiplier)),
+                0,
+                MaxTemperature
+            );
 
-        public void DecayTemperature(float time) =>
-            Temperature = Mathf.Clamp(Temperature - (TemperatureRise * time), 0, MaxTemperature);
+        public void DecayTemperature(float time, float temperatureMultiplier = 0f) =>
+            Temperature = Mathf.Clamp(
+                Temperature - (TemperatureRise * time * (1 + temperatureMultiplier)),
+                0,
+                MaxTemperature
+            );
     }
-    #endregion
 
+    #endregion
+    #endregion
+    #region Advanced
+
+    public abstract class SculptableResource : Resource
+    {
+        protected SculptableResource(string name)
+            : base(name) { }
+
+        public abstract void Sculpt();
+    }
+
+    public abstract class MeltableResource : HotResource
+    {
+        protected MeltableResource(
+            string name,
+            float initialTemperature = 0f,
+            float maxTemperature = 500f,
+            float meltTemperature = 400f,
+            float temperatureRise = 8f,
+            float temperatureDecay = 4f
+        )
+            : base(
+                name,
+                initialTemperature,
+                maxTemperature,
+                meltTemperature,
+                temperatureRise,
+                temperatureDecay
+            ) { }
+
+        public abstract void Melt();
+    }
+
+    #endregion
     #region Custom Resources
 
-    public class Wood : Resource
+    public class Wood : SculptableResource
     {
         public Wood()
-            : base("Wood", ResourceType.Sculptable) { }
+            : base("Wood") { }
 
-        public override void Interact() => Sculpt();
-
-        private void Sculpt() { }
+        public override void Sculpt() { }
     }
 
-    public class Iron : HotResource
+    public class Iron : MeltableResource
     {
         public Iron()
             : base("Iron") { }
 
-        public override void Interact() => Melt();
-
-        private void Melt() { }
+        public override void Melt() { }
     }
 
-    public class Coal : Resource
+    public class Coal : FuelResource
     {
         public Coal()
-            : base("Coal", ResourceType.Placeable) { }
-
-        public override void Interact() => Place();
-
-        private void Place() { }
+            : base("Coal", 60) { }
     }
 
     #endregion
