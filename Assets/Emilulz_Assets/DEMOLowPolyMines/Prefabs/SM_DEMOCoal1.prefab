@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 710a1adfd516f924f9c18ec35dfda393, type: 3}
       propertyPath: m_Name
-      value: SM_DEMOCoal1
+      value: Coal
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
