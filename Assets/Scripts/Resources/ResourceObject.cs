@@ -13,18 +13,14 @@ public class ResourceObject : MonoBehaviour
     Color defaultColor;
     MeshRenderer meshR;
     public IResource Resource { get; private set; }
-    bool interactable = true;
-
-    bool isMeltable => Resource is MeltableResource;
 
     void Awake()
     {
         Resource = GenerateResource();
         meshR = GetComponent<MeshRenderer>();
         defaultColor = meshR.material.color;
+        Time.timeScale = 5f;
     }
-
-    public void SetInteractive(bool interactive) => interactable = interactive;
 
     IResource GenerateResource()
     {
@@ -32,13 +28,13 @@ public class ResourceObject : MonoBehaviour
         switch (resourceName.ToLower())
         {
             case "wood":
-                resource = new Wood();
+                resource = new Wood(gameObject);
                 break;
             case "iron":
-                resource = new Iron();
+                resource = new Iron(gameObject, new Mesh[] { });
                 break;
             case "coal":
-                resource = new Coal();
+                resource = new Coal(gameObject);
                 break;
 
             default:

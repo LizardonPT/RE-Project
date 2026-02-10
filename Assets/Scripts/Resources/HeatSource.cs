@@ -29,6 +29,7 @@ public class HeatSource : MonoBehaviour
     Light light;
 
     List<MeltableResource> melting = new List<MeltableResource>();
+    List<MeltableResource> decaying = new List<MeltableResource>();
     float fuelTime = 0f;
     float MAX_FUEL_TIME = 300;
     float MIN_FUEL_TIME = 0.00001f;
@@ -45,6 +46,7 @@ public class HeatSource : MonoBehaviour
     {
         smokeColor = smoke.main.startColor.color;
         UpdateVisualComponents();
+        StartCoroutine(DecayTemperatures());
     }
 
     public void OnTriggerEnter(Collider coll)
@@ -69,6 +71,21 @@ public class HeatSource : MonoBehaviour
         }
     }
 
+    public void OnTriggerExit(Collider coll)
+    {
+        ResourceObject resourceObj = coll.gameObject.GetComponent<ResourceObject>();
+
+        if (!resourceObj)
+            return; // not resource
+
+        IResource resource = resourceObj.Resource;
+        if (resource is MeltableResource) // iron
+        {
+            MeltableResource meltable = (MeltableResource)resource;
+            RemoveMeltable(meltable);
+        }
+    }
+
     void StartClock()
     {
         // more objects = slower update rate
@@ -90,8 +107,16 @@ public class HeatSource : MonoBehaviour
         if (!melting.Contains(mResource))
         {
             melting.Add(mResource);
+            if (!decaying.Contains(mResource))
+                decaying.Add(mResource);
             StartClock();
         }
+    }
+
+    void RemoveMeltable(MeltableResource mResource)
+    {
+        if (melting.Contains(mResource))
+            melting.Remove(mResource);
     }
 
     IEnumerator Clock(float time, float efficiency = 1)
@@ -125,18 +150,31 @@ public class HeatSource : MonoBehaviour
         }
     }
 
+    IEnumerator DecayTemperatures()
+    {
+        float updateRate = UpdateRate.x;
+        WaitForSeconds wait = new WaitForSeconds(updateRate);
+
+        while (true)
+        {
+            yield return wait;
+            for (int i = 0; i < decaying.Count; i++)
+                decaying[i].DecayTemperature(updateRate);
+        }
+    }
+
     float GetRate(float efficiency) => Mathf.Lerp(UpdateRate.x, UpdateRate.y, efficiency);
 
     public void UpdateHeat(float time, bool exponentialBehaviour = true)
     {
         float riseMult = exponentialBehaviour ? FuelLeft / MAX_FUEL_TIME : 0;
-        float decayMult = exponentialBehaviour ? 1 - (FuelLeft / MAX_FUEL_TIME) : 0;
+        // float decayMult = exponentialBehaviour ? 1 - (FuelLeft / MAX_FUEL_TIME) : 0;
 
         for (int i = 0; i < melting.Count; i++)
-        {
             melting[i].RiseTemperature(time, riseMult); // more heat = faster temperature rise
-            melting[i].DecayTemperature(time, decayMult); // more heat = slower temperature decay
-        }
+
+        // for (int i = 0; i < decaying.Count; i++)
+        //     melting[i].DecayTemperature(time);
     }
 
     #region Visual
@@ -171,7 +209,8 @@ public class HeatSource : MonoBehaviour
     {
         var main = smoke.main; // copy
         Color newColor = smokeColor;
-        newColor.a = Efficiency;
+        float alpha = Mathf.Lerp(0.2f, 1, Efficiency);
+        newColor.a = alpha;
         main.startColor = newColor;
     }
 
