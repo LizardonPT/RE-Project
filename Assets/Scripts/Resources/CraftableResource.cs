@@ -25,7 +25,7 @@ public class CraftableResource : MonoBehaviour
         if (craftable == null)
             return;
 
-        Collider coll = collision.collider;
+        Collision coll = collision;
 
         bool hit = craftable.Hit(coll, craftable.StrengthNeeded);
 

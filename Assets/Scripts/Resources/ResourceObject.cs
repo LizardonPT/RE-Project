@@ -9,40 +9,16 @@ using UnityEngine.XR;
 public class ResourceObject : MonoBehaviour
 {
     [SerializeField]
-    string resourceName;
+    const string resourceName = "None";
     Color defaultColor;
     MeshRenderer meshR;
     public IResource Resource { get; private set; }
 
     void Awake()
     {
-        Resource = GenerateResource();
+        Resource = Utilities.GenerateResource(resourceName, gameObject);
         meshR = GetComponent<MeshRenderer>();
         defaultColor = meshR.material.color;
-        Time.timeScale = 5f;
-    }
-
-    IResource GenerateResource()
-    {
-        IResource resource = null;
-        switch (resourceName.ToLower())
-        {
-            case "wood":
-                resource = new Wood(gameObject);
-                break;
-            case "iron":
-                resource = new Iron(gameObject, new Mesh[] { });
-                break;
-            case "coal":
-                resource = new Coal(gameObject);
-                break;
-
-            default:
-                Debug.Log("Resource type not found!");
-                break;
-        }
-
-        return resource;
     }
 
     public void AutoDestroy() => StartCoroutine(DestructionProcess(0.2f, 10));

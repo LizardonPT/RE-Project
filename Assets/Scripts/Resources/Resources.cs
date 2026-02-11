@@ -1,3 +1,4 @@
+using Tools;
 using UnityEngine;
 
 namespace Resources
@@ -138,7 +139,7 @@ namespace Resources
         public Mesh[] Meshes { get; }
         public MeshFilter Filter { get; }
         public float StrengthNeeded { get; }
-        public abstract bool Hit(Collider coll, float strengthNeeded);
+        public abstract bool Hit(Collision coll, float strengthNeeded);
     }
 
     public abstract class CraftableResource : HotResource, ICraftableResource
@@ -180,12 +181,22 @@ namespace Resources
             StrengthNeeded = strengthNeeded;
         }
 
-        public bool Hit(Collider coll, float minVelocity = 2f)
+        public bool Hit(Collision collision, float minVelocity = 2f)
         {
             if (Progress >= Meshes.Length)
                 return false;
 
-            float velocity = coll.gameObject.GetComponent<Rigidbody>().linearVelocity.magnitude;
+            ToolObject toolObj = collision.collider.gameObject.GetComponent<ToolObject>();
+            Hammer hammer = toolObj.Tool as Hammer;
+
+            if (hammer == null)
+            {
+                Debug.LogError("You need a Hammer for that!");
+                return false;
+            }
+            float velocity = collision
+                .collider.gameObject.GetComponent<Rigidbody>()
+                .linearVelocity.magnitude;
             if (velocity < minVelocity)
             {
                 Debug.LogError("Too weak!");

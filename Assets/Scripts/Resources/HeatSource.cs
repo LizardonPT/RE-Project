@@ -35,7 +35,7 @@ public class HeatSource : MonoBehaviour
     float MIN_FUEL_TIME = 0.00001f;
     Coroutine clockCoroutine;
 
-    bool burning = false;
+    bool burning = true;
     public bool Burning => burning;
 
     private bool HasFuel => FuelLeft > MIN_FUEL_TIME;
@@ -47,6 +47,7 @@ public class HeatSource : MonoBehaviour
         smokeColor = smoke.main.startColor.color;
         UpdateVisualComponents();
         StartCoroutine(DecayTemperatures());
+        SetState(false);
     }
 
     public void OnTriggerEnter(Collider coll)
@@ -209,7 +210,12 @@ public class HeatSource : MonoBehaviour
     {
         var main = smoke.main; // copy
         Color newColor = smokeColor;
-        float alpha = Mathf.Lerp(0.2f, 1, Efficiency);
+        float alpha;
+        if (Efficiency > 0)
+            alpha = Mathf.Lerp(0.2f, 1, Efficiency);
+        else
+            alpha = 0;
+
         newColor.a = alpha;
         main.startColor = newColor;
     }

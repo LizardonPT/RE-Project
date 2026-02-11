@@ -1,3 +1,5 @@
+using Resources;
+using Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,5 +43,48 @@ public abstract class Utilities
         Mouse mouse = Mouse.current;
         Vector2 delta = mouse.delta.ReadValue();
         return new Vector2(delta.x, delta.y);
+    }
+
+    public static IResource GenerateResource(string name, GameObject obj)
+    {
+        IResource resource = null;
+        switch (name.ToLower())
+        {
+            case "wood":
+                resource = new Wood(obj);
+                break;
+            case "iron":
+                resource = new Iron(obj, new Mesh[] { });
+                break;
+            case "coal":
+                resource = new Coal(obj);
+                break;
+
+            default:
+                Debug.Log("Resource type not found!");
+                break;
+        }
+
+        return resource;
+    }
+
+    public static ITool GenerateTool(string name, GameObject obj)
+    {
+        ITool tool = null;
+        switch (name.ToLower())
+        {
+            case "hammer":
+                tool = new Hammer(obj);
+                break;
+            case "axe":
+                tool = new Axe(obj);
+                break;
+
+            default:
+                Debug.Log("Tool type not found!");
+                break;
+        }
+
+        return tool;
     }
 }
