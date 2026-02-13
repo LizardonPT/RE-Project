@@ -30,6 +30,9 @@ public class Entity : MonoBehaviour
     CameraControl cameraControl;
     public CameraControl CameraControl => cameraControl;
 
+    [SerializeField]
+    private FastAccess acess;
+
     void Initialize()
     {
         entityStats = new PlayerStats();
@@ -38,7 +41,8 @@ public class Entity : MonoBehaviour
         movementControl = new MovementControl(
             this,
             entityStats.MovementStats.MovementSpeed,
-            entityStats.MovementStats.MovementResponse
+            entityStats.MovementStats.MovementResponse,
+            acess
         );
     }
 
@@ -49,5 +53,10 @@ public class Entity : MonoBehaviour
         movementControl?.Update();
         if (ControllingCamera)
             cameraControl.Update();
+    }
+
+    void OnParticleCollision(GameObject obj)
+    {
+        Debug.Log("Particle collided with: " + obj.name);
     }
 }

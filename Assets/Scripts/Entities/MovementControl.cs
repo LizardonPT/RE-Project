@@ -3,15 +3,30 @@ using UnityEngine.XR;
 
 public class MovementControl
 {
-    public MovementControl(Entity entity, float movementSpeed, float movementResponse)
+    public enum MovementType
+    {
+        Player,
+        NPC,
+    }
+
+    public MovementControl(
+        Entity entity,
+        float movementSpeed,
+        float movementResponse,
+        FastAccess acess
+    )
     {
         this.entity = entity;
         this.movementSpeed = movementSpeed;
         this.movementResponse = movementResponse;
+        this.acess = acess;
     }
+
+    private FastAccess acess;
 
     float movementSpeed;
     float movementResponse = 1;
+    private MovementType movementType;
 
     Entity entity;
     public Entity Entity => entity;
@@ -27,7 +42,13 @@ public class MovementControl
         if (!EntityAttributed)
             return false;
 
-        Vector2 input = Utilities.GetKeyboardInputs();
+        Vector2 input = Vector2.zero;
+
+        if (movementType == MovementType.Player)
+            input = Utilities.GetKeyboardInputs();
+        else if (movementType == MovementType.NPC)
+            input = acess.Player.transform.position - entity.transform.position;
+
         if (input.sqrMagnitude > 1f)
             input.Normalize();
         else
