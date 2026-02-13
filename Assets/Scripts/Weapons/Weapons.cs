@@ -1,26 +1,14 @@
-namespace Weapons
+using UnityEngine;
+
+[RequireComponent(typeof(Collider))]
+public class WeaponPartObject : MonoBehaviour
 {
-    public enum WeaponParts
-    {
-        Blade,
-        Handle,
-    }
+    [SerializeField]
+    private WeaponPart weaponPart;
+    public WeaponPart WeaponPart => weaponPart;
 
-    public interface IWeaponPart
+    void Awake()
     {
-        public string Name { get; set; }
-        public WeaponParts Part { get; set; }
-    }
-
-    public class WeaponPart : IWeaponPart
-    {
-        public string Name { get; set; }
-        public WeaponParts Part { get; set; }
-
-        public WeaponPart(string name, WeaponParts part)
-        {
-            Name = name;
-            Part = part;
-        }
+        GetComponent<Collider>().isTrigger = true;
     }
 }

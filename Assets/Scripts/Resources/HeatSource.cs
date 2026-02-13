@@ -212,7 +212,7 @@ public class HeatSource : MonoBehaviour
         Color newColor = smokeColor;
         float alpha;
         if (Efficiency > 0)
-            alpha = Mathf.Lerp(0.2f, 1, Efficiency);
+            alpha = Mathf.Lerp(0.5f, 1, Efficiency);
         else
             alpha = 0;
 
