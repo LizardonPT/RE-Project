@@ -5223,6 +5223,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 2871673737297612610, guid: 3df9b2ddf5f6382488f21cad82623b16, type: 3}
+      propertyPath: coalPrefab
+      value: 
+      objectReference: {fileID: 1194492887215262539, guid: f6f3e2eaa1d71f24d8ba37ebc7d020cf, type: 3}
     - target: {fileID: 2928202648076585032, guid: 3df9b2ddf5f6382488f21cad82623b16, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
