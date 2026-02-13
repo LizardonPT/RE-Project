@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 1c9f418f7c5c60e4eaa4203c8db2ca81
+guid: 568a5265989c061499145300810e4cdd
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Shield
-    second: {fileID: 2100000, guid: 1fe93169f7ba4824bb011e0560c60e38, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
