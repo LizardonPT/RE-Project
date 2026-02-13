@@ -9,7 +9,7 @@ using UnityEngine.XR;
 public class ResourceObject : MonoBehaviour
 {
     [SerializeField]
-    const string resourceName = "None";
+    string resourceName = "None";
     Color defaultColor;
     MeshRenderer meshR;
     public IResource Resource { get; private set; }

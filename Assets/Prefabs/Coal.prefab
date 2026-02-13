@@ -80,10 +80,10 @@ PrefabInstance:
       addedObject: {fileID: 8235654897665145515}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3c198a84214b85a4fbefb34f64d7449d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2220061249452018766}
+      addedObject: {fileID: 882331738025837316}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3c198a84214b85a4fbefb34f64d7449d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 882331738025837316}
+      addedObject: {fileID: 1016023054445399301}
   m_SourcePrefab: {fileID: 100100000, guid: 3c198a84214b85a4fbefb34f64d7449d, type: 3}
 --- !u!1 &1194492887215262539 stripped
 GameObject:
@@ -138,19 +138,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.24755566, y: 0.24755564, z: 0.271013}
   m_Center: {x: 0.018634133, y: 0.12086843, z: -0.0034294124}
---- !u!114 &2220061249452018766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194492887215262539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fec02c800bc10ea44adcc0bb92c65b20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ResourceObject
-  resourceName: Coal
 --- !u!114 &882331738025837316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,3 +267,16 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
+--- !u!114 &1016023054445399301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194492887215262539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec02c800bc10ea44adcc0bb92c65b20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceObject
+  resourceName: Coal
